@@ -3,7 +3,9 @@
 class Product {
 	
 	protected $product_url = '';
+	protected $ali_product_id = '';
 	protected $feedback_url = '';
+	protected $user_imgs = array();
 
 	public function __construct($url)
 	{
@@ -92,12 +94,12 @@ class Product {
 			$filtered = $$domxpathname->query("//$tagName" . '[@' . $attrName . "='$attrValue']/$childTagName");
 
 			foreach ($filtered as $node) {
-				$review_img_urls[] = $node->getAttribute( 'src' );
+				$this->user_imgs[] = $node->getAttribute( 'src' );
 			}
 		}
 
 
-		return $review_img_urls ;
+		return $this->user_imgs ;
 	}
 
 	public function getUserImgHtml()
@@ -111,6 +113,31 @@ class Product {
 		
 		return $user_img_html;
 	}
+
+	public function downloadAllUserImgs()
+	{
+		parse_str( parse_url( $this->feedback_url, PHP_URL_QUERY));
+		$this->ali_product_id = $productId ;
+		$dir = "userImgs/aliproductId-$this->ali_product_id";
+	
+		if (!is_dir($dir))
+			mkdir($dir);
+
+		foreach ($this->user_imgs as $img){
+			$i = 1;
+			
+			$filename = "$this->ali_product_id-img-$i.jpg";
+
+			
+			if(copy($img_url, $dir.$filename))
+				echo "Done downloading : $filename into $dir directory";
+
+			$i++;
+
+		}
+		return true;
+	}
+	
 }
 
 	
@@ -118,7 +145,7 @@ if(isset($_POST['product_url'])){
 
 	$product = new Product($_POST['product_url']);
 
-	echo $product->getUserImgHtml();
+	echo $product->downloadAllUserImgs();
 
 }
 ?>
