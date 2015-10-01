@@ -24,8 +24,7 @@ class Product {
 		foreach ($dom_product->getElementsByTagName('iframe') as $node) {
 			$feedback_urls[] = $node->getAttribute( 'thesrc' );
 		}
-		// echo $feedback_urls[0];
-		// die;
+
 		$this->feedback_url = $feedback_urls[0] ;
 		return $this->feedback_url ;
 	}
@@ -75,10 +74,11 @@ class Product {
 	{
 
 		$total_pages = $this->getNumReviewPages();
+		echo "Looking for pics on $total_pages pages<br/>";
 
 		for ($i=1; $i <= $total_pages ; $i++) { 
 			// $i = 2;
-			echo 'i is now '.$i."\n";
+			echo 'i is now '.$i;
 			$domname = 'dom_feedback'.$i;
 
 			$$domname = new DOMDocument;
@@ -116,25 +116,25 @@ class Product {
 
 	public function downloadAllUserImgs()
 	{
-		parse_str( parse_url( $this->feedback_url, PHP_URL_QUERY));
+		$this->getImgUrls();
+		parse_str( parse_url( $this->getFeedbackUrl(), PHP_URL_QUERY));
 		$this->ali_product_id = $productId ;
-		$dir = "userImgs/aliproductId-$this->ali_product_id";
+		$dir = "userImgs/aliproductId-$this->ali_product_id/";
 	
 		if (!is_dir($dir))
 			mkdir($dir);
 
-		foreach ($this->user_imgs as $img){
-			$i = 1;
-			
-			$filename = "$this->ali_product_id-img-$i.jpg";
+		echo "We found ".count($this->user_imgs)."user-uploaded pics.<br ><br >";
 
-			
-			if(copy($img_url, $dir.$filename))
-				echo "Done downloading : $filename into $dir directory";
+		for ($i=0; $i < count($this->user_imgs); $i++) { 
+	
+			$filename = "$this->ali_product_id-img$i.jpg";
 
-			$i++;
+			if(copy($this->user_imgs[$i], $dir.$filename))
+				echo "Done downloading : $filename into $dir directory <br />";
 
 		}
+
 		return true;
 	}
 	
@@ -142,11 +142,14 @@ class Product {
 
 	
 if(isset($_POST['product_url'])){ 
-
+	$start_time = time();
 	$product = new Product($_POST['product_url']);
 
-	echo $product->downloadAllUserImgs();
-
+	$product->downloadAllUserImgs();
+	
+	$end_time = time();
+	$time_elapsed = $end_time - $start_time;
+	echo "This script took $time_elapsed seconds to run.";
 }
 ?>
 
