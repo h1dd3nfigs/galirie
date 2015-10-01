@@ -2,10 +2,10 @@
 
 class Product {
 	
-	protected $product_url = '';
-	protected $ali_product_id = '';
-	protected $feedback_url = '';
-	protected $user_imgs = array();
+	public $product_url = '';
+	public $ali_product_id = '';
+	public $feedback_url = '';
+	public $user_imgs = array();
 
 	public function __construct($url)
 	{
@@ -136,20 +136,29 @@ class Product {
 		}
 
 		return true;
-	}
-	
+	}	
 }
 
 	
 if(isset($_POST['product_url'])){ 
+	
 	$start_time = time();
-	$product = new Product($_POST['product_url']);
 
+	$product = new Product($_POST['product_url']);
 	$product->downloadAllUserImgs();
 	
 	$end_time = time();
-	$time_elapsed = $end_time - $start_time;
-	echo "This script took $time_elapsed seconds to run.";
+
+	echo "This script took ".( $end_time - $start_time ). "seconds to run.<br/><br/>";
+	$output = array();
+	$output['product_url'] = $product->product_url;
+	$output['ali_product_id'] = $product->ali_product_id;
+	$output['total_user_imgs'] = count($product->user_imgs);
+	$output['user_imgs'] = $product->user_imgs;
+
+echo	json_encode($output);
+	//append to a feed file
+
 }
 ?>
 
