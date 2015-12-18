@@ -25,6 +25,7 @@ include('AliExpressAPI.class.php');
 $fields_to_return = array(
 							'totalResults',
 							'productId',
+							'productUrl',
 							'productTitle',
 							'salePrice',
 							'volume',
