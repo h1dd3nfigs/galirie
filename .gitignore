@@ -2,3 +2,7 @@ userImgs/*
  
 #contains secret api key
 settings.php
+
+*.jpg
+*.rtf
+*.pdf

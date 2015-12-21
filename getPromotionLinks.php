@@ -27,7 +27,7 @@ $options = array(
 				
 			);
 
-$apiName = 'api.getPromotionLink'; // or is it api.getPromotionLink ??
+$apiName = 'api.getPromotionLinks'; // or is it api.getPromotionLink ??
 
 $feedFile = 'ali-feeds/'.$apiName.'/alifeed.'.$apiName.'_'.date('Y-m-d');
 
